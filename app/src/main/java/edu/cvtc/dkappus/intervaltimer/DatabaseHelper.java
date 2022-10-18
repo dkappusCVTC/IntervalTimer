@@ -22,27 +22,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        SQLiteDatabase db = this.getWritableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create db tables
-        //db.execSQL("CREATE TABLE " + DataInfoEntry.TABLE1_NAME +
-        //        " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + DataInfoEntry.COLUMN_TASK_NAME + " TEXT, " + DataInfoEntry.COLUMN_TASK_TIME + " TEXT)");
         db.execSQL(DataInfoEntry.SQL_CREATE_TABLE1);
         db.execSQL(DataInfoEntry.SQL_CREATE_INDEX1_TABLE1);
         db.execSQL(RoutineDataInfoEntry.SQL_CREATE_TABLE2);
         db.execSQL(RoutineDataInfoEntry.SQL_CREATE_INDEX1_TABLE2);
-
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF EXISTS " + RoutineDataInfoEntry.TABLE2_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DataInfoEntry.TABLE1_NAME);
-        onCreate(db);
+//        db.execSQL("DROP TABLE IF EXISTS " + RoutineDataInfoEntry.TABLE2_NAME);
+//        db.execSQL("DROP TABLE IF EXISTS " + DataInfoEntry.TABLE1_NAME);
+//        onCreate(db);
 
     }
 

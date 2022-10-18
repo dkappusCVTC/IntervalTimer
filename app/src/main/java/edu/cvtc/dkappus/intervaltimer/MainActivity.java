@@ -1,21 +1,30 @@
 package edu.cvtc.dkappus.intervaltimer;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 //import androidx.navigation.ui.AppBarConfiguration;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import edu.cvtc.dkappus.intervaltimer.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // Constants
+    public static final int LOADER_TASKS = 0;
     public static final String EXTRA_MESSAGE = "edu.cvtc.dkappus.intervaltimer.extra.MESSAGE";
 
     // Member Variables
@@ -23,8 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mITLayoutManager;
     private IT_RecyclerViewAdapter mITRecyclerAdapter;
+    private boolean mIsCreated = false;
 
-    ArrayList<IntervalTimerModel> intervalTimerModels = IntervalTimerModel.getInstance().intervalTimerModels;
+    //ArrayList<IntervalTimerModel> intervalTimerModels = IntervalTimerModel.getInstance().intervalTimerModels;
 
 
     @Override
@@ -38,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        //mRecyclerView = findViewById(R.id.it_RecyclerView);
-
         mDbHelper = new DatabaseHelper(this);
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setUpIntervalTimerModels();
+        //setUpIntervalTimerModels();
         /*
         IT_RecyclerViewAdapter adapter =
                 new IT_RecyclerViewAdapter(this, intervalTimerModels);
@@ -69,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
         mITLayoutManager = new LinearLayoutManager(this);
 
 
-        // We do not have a cursor yet, so pass null  (NOT NULL CURRENTLY, OR IT BREAKS)
-        mITRecyclerAdapter = new IT_RecyclerViewAdapter(this, intervalTimerModels);
+        // We do not have a cursor yet, so pass null  (MAY BREAK IF NULL)
+        mITRecyclerAdapter = new IT_RecyclerViewAdapter(this, null);
 
         // Display the routines
         displayRoutines();
@@ -83,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeTest() {
         // Testing Insert into DB
-        /*boolean isInserted = mDbHelper.insertData("Test", "12:00:00");
+        /*
+        boolean isInserted = mDbHelper.insertData("Running", "01:12:00");
 
         if (isInserted == true) {
             Toast.makeText(MainActivity.this,
@@ -139,6 +148,21 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    protected void onDestroy() {
+        mDbHelper.close();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // User restartLoader instead of initLoader to make sure
+        // you re-query the database each time the activity is
+        // loaded in the app.
+        LoaderManager.getInstance(this).restartLoader(LOADER_TASKS, null,this);
+    }
+
     /*
     public ArrayList<IntervalTimerModel> getIntervalTimerModels() {
         return intervalTimerModels;
@@ -149,32 +173,79 @@ public class MainActivity extends AppCompatActivity {
     }
     */
 
-    private void setUpIntervalTimerModels() {
-        if (intervalTimerModels.isEmpty()) {
-            String[] intervalTimerNames =
-                    getResources().getStringArray(R.array.interval_timer_routine_name);
-            String[] intervalTimerTasks =
-                    getResources().getStringArray(R.array.interval_timer_tasks);
-            for (int i = 0; i < intervalTimerNames.length; i++) {
-                intervalTimerModels.add(
-                        new IntervalTimerModel(
-                                intervalTimerNames[i], intervalTimerTasks[i], String.valueOf(i)));
-            }
+//    private void setUpIntervalTimerModels() {
+//        if (intervalTimerModels.isEmpty()) {
+//            String[] intervalTimerNames =
+//                    getResources().getStringArray(R.array.interval_timer_routine_name);
+//            String[] intervalTimerTasks =
+//                    getResources().getStringArray(R.array.interval_timer_tasks);
+//            for (int i = 0; i < intervalTimerNames.length; i++) {
+//                intervalTimerModels.add(
+//                        new IntervalTimerModel(
+//                                intervalTimerNames[i], intervalTimerTasks[i], String.valueOf(i)));
+//            }
+//
+//        }
+//
+//        /*
+//        String[] intervalTimerNames =
+//                getResources().getStringArray(R.array.interval_timer_routine_name);
+//        String[] intervalTimerId = getResources().getStringArray(R.array.interval_timer_routine_id);
+//        String[] intervalTimerTasks = getResources().getStringArray(R.array.interval_timer_tasks);
+//
+//        for (int i = 0; i < intervalTimerNames.length; i++) {
+//            intervalTimerModels.add(new IntervalTimerModel(intervalTimerNames[i],
+//                    intervalTimerTasks[i], intervalTimerId[i]));
+//        }
+//        */
+//
+//    }
 
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        // Create new cursor loader
+        CursorLoader loader = null;
+
+        if (id == LOADER_TASKS) {
+            loader = new CursorLoader(this) {
+                @Override
+                public Cursor loadInBackground() {
+                    mIsCreated = true;
+                    // Open your database in read mode.
+                    SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+                    // Create a list of columns you want to return.
+                    String[] taskColumns = {
+                            DatabaseContract.DataInfoEntry._ID,
+                            DatabaseContract.DataInfoEntry.COLUMN_TASK_NAME,
+                            DatabaseContract.DataInfoEntry.COLUMN_TASK_TIME};
+
+                    // Create an order by field for sorting purposes
+                    String taskOrderBy = DatabaseContract.DataInfoEntry._ID;
+
+                    return db.query(DatabaseContract.DataInfoEntry.TABLE1_NAME, taskColumns,
+                            null, null, null, null, taskOrderBy);
+                }
+            };
         }
-
-        /*
-        String[] intervalTimerNames =
-                getResources().getStringArray(R.array.interval_timer_routine_name);
-        String[] intervalTimerId = getResources().getStringArray(R.array.interval_timer_routine_id);
-        String[] intervalTimerTasks = getResources().getStringArray(R.array.interval_timer_tasks);
-
-        for (int i = 0; i < intervalTimerNames.length; i++) {
-            intervalTimerModels.add(new IntervalTimerModel(intervalTimerNames[i],
-                    intervalTimerTasks[i], intervalTimerId[i]));
-        }
-        */
-
+        return loader;
     }
 
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        if (loader.getId() == LOADER_TASKS && mIsCreated) {
+            // Associate the cursor with your RecyclerAdapter
+            mITRecyclerAdapter.changeCursor(data);
+            mIsCreated = false;
+        }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        if (loader.getId() == LOADER_TASKS) {
+            // Change the cursor to null (cleanup)
+            mITRecyclerAdapter.changeCursor(null);
+        }
+    }
 }

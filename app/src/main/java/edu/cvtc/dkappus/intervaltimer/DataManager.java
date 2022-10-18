@@ -15,7 +15,6 @@ public class DataManager {
     // Member Attributes
     private static DataManager ourInstance = null;
     private List<TaskTable> mTasks = new ArrayList<>();
-    private List<RoutineTable> mRoutines = new ArrayList<>();
 
     public static DataManager getInstance() {
         if (ourInstance == null) {
@@ -26,9 +25,8 @@ public class DataManager {
 
     // Return a list of tasks and list of routines
     public List<TaskTable> getTasks() { return mTasks;}
-    public List<RoutineTable> getRoutines() { return mRoutines;}
 
-    private static void loadDataFromDatabase(Cursor taskCursor, Cursor routineCursor) {
+    private static void loadDataFromDatabase(Cursor taskCursor) {
         /*
          * Retrieve the field positions in the database.
          * The positions of fields may change over time as the database grows so
@@ -43,26 +41,12 @@ public class DataManager {
         int taskIdPosition =
                 taskCursor.getColumnIndex(DatabaseContract.DataInfoEntry._ID);
 
-        int listRoutineNamePosition =
-                routineCursor.getColumnIndex(
-                        DatabaseContract.RoutineDataInfoEntry.COLUMN_ROUTINE_NAME);
-        int listRoutineOrderPosition =
-                routineCursor.getColumnIndex(
-                        DatabaseContract.RoutineDataInfoEntry.COLUMN_ROUTINE_ORDER);
-        int listRoutineTaskIdPosition =
-                routineCursor.getColumnIndex(
-                        DatabaseContract.RoutineDataInfoEntry.COLUMN_ROUTINE_TASKID);
-        int routineIdPosition =
-                routineCursor.getColumnIndex(DatabaseContract.RoutineDataInfoEntry._ID);
-
-
         /*
         Create an instance of the DataManager and use the DataManager
         to clear any information from the array lists.
          */
         DataManager dm = getInstance();
         dm.mTasks.clear();
-        dm.mRoutines.clear();
 
         /*
         Loop through the cursor rows and add new task/routine object to
@@ -83,22 +67,6 @@ public class DataManager {
         // close the task cursor to prevent memory leaks
         taskCursor.close();
 
-        while (routineCursor.moveToNext()) {
-            String listName =
-                    routineCursor.getString(listRoutineNamePosition);
-            int listOrder =
-                    routineCursor.getInt(listRoutineOrderPosition);
-            int listTaskId =
-                    routineCursor.getInt(listRoutineTaskIdPosition);
-            int id = routineCursor.getInt(routineIdPosition);
-
-            RoutineTable list = new RoutineTable(id, listName, listOrder, listTaskId);
-
-            dm.mRoutines.add(list);
-        }
-
-        // close the task cursor to prevent memory leaks
-        routineCursor.close();
     }
 
     // Method to populate Cursor object before calling the loadDataFromDatabase Method
@@ -112,17 +80,8 @@ public class DataManager {
                 DatabaseContract.DataInfoEntry.COLUMN_TASK_NAME,
                 DatabaseContract.DataInfoEntry.COLUMN_TASK_TIME};
 
-        // Create a list of columns to return from routine table
-        String[] routineColumns = {
-                DatabaseContract.RoutineDataInfoEntry._ID,
-                DatabaseContract.RoutineDataInfoEntry.COLUMN_ROUTINE_NAME,
-                DatabaseContract.RoutineDataInfoEntry.COLUMN_ROUTINE_ORDER,
-                DatabaseContract.RoutineDataInfoEntry.COLUMN_ROUTINE_TASKID};
-
         // Create an order by field for sorting purposes
         String taskOrderBy = DatabaseContract.DataInfoEntry.COLUMN_TASK_NAME;
-        String routineOrderBy = DatabaseContract.RoutineDataInfoEntry.COLUMN_ROUTINE_NAME +
-                ", " + DatabaseContract.RoutineDataInfoEntry.COLUMN_ROUTINE_ORDER;
 
         // Populate the cursor with the results of the queries
         final Cursor taskCursor = db.query(DatabaseContract.DataInfoEntry.TABLE1_NAME,
@@ -130,13 +89,8 @@ public class DataManager {
                 null, null, null, null,
                 taskOrderBy);
 
-        final Cursor routineCursor = db.query(DatabaseContract.RoutineDataInfoEntry.TABLE2_NAME,
-                routineColumns,
-                null,null,null,null,
-                routineOrderBy);
-
         // Call the method to load the array lists
-        loadDataFromDatabase(taskCursor, routineCursor);
+        loadDataFromDatabase(taskCursor);
     }
 
 }

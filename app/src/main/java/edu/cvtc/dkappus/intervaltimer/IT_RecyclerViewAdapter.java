@@ -3,6 +3,7 @@ package edu.cvtc.dkappus.intervaltimer;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class IT_RecyclerViewAdapter extends RecyclerView.Adapter<IT_RecyclerViewAdapter.MyViewHolder> {
     // Member variables
+
     private final Context mContext;
     private final LayoutInflater mInflater;
     private Cursor mCursor;
@@ -23,7 +25,7 @@ public class IT_RecyclerViewAdapter extends RecyclerView.Adapter<IT_RecyclerView
     public IT_RecyclerViewAdapter(Context context, Cursor cursor) {
         this.mContext = context;
         this.mCursor = cursor;
-        this.mInflater = LayoutInflater.from(mContext);
+        this.mInflater = LayoutInflater.from(context);
 
         // Used to get the positions of the columns we
         // are interested in.
@@ -63,14 +65,14 @@ public class IT_RecyclerViewAdapter extends RecyclerView.Adapter<IT_RecyclerView
 
     @NonNull
     @Override
-    public IT_RecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
-        return new IT_RecyclerViewAdapter.MyViewHolder(view);
+        return new MyViewHolder(view);
     }
 
     // Uses the information from the inner class
     @Override
-    public void onBindViewHolder(@NonNull IT_RecyclerViewAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         // Move the cursor to the correct row
         mCursor.moveToPosition(position);
 
@@ -85,7 +87,7 @@ public class IT_RecyclerViewAdapter extends RecyclerView.Adapter<IT_RecyclerView
         // Pass the information into the holder
         holder.tvName.setText(taskName);
         holder.tvTasks.setText(taskTime);
-        holder.tvId.setText(taskID);
+        holder.tvId.setText(String.valueOf(taskID));
     }
 
     @Override
