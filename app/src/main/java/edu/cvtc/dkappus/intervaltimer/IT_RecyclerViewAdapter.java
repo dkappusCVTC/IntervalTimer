@@ -15,19 +15,20 @@ import java.util.ArrayList;
 
 public class IT_RecyclerViewAdapter extends RecyclerView.Adapter<IT_RecyclerViewAdapter.MyViewHolder> {
     // Member variables
-    Context mContext;
-    ArrayList<IntervalTimerModel> mIntervalTimerModels;
+    private Context mContext;
+    private LayoutInflater mInflater;
+    private ArrayList<IntervalTimerModel> mIntervalTimerModels;
 
     public IT_RecyclerViewAdapter(Context context, ArrayList<IntervalTimerModel> intervalTimerModels) {
         this.mContext = context;
+        mInflater = LayoutInflater.from(mContext);
         this.mIntervalTimerModels = intervalTimerModels;
     }
 
     @NonNull
     @Override
     public IT_RecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.recyclerview_row, parent, false);
+        View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
 
         return new IT_RecyclerViewAdapter.MyViewHolder(view);
     }
