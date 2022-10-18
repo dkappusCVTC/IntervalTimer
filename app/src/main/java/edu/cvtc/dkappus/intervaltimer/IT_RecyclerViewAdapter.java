@@ -11,24 +11,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
 public class IT_RecyclerViewAdapter extends RecyclerView.Adapter<IT_RecyclerViewAdapter.MyViewHolder> {
     // Member variables
-    private Context mContext;
-    private LayoutInflater mInflater;
+    private final Context mContext;
+    private final LayoutInflater mInflater;
     private Cursor mCursor;
     private int mITNamePosition;
     private int mITTimePosition;
     private int mITIDPosition;
-    private ArrayList<IntervalTimerModel> mIntervalTimerModels;
 
-    public IT_RecyclerViewAdapter(Context context, ArrayList<IntervalTimerModel> intervalTimerModels) {
+    public IT_RecyclerViewAdapter(Context context, Cursor cursor) {
         this.mContext = context;
-        mInflater = LayoutInflater.from(mContext);
-        this.mIntervalTimerModels = intervalTimerModels;
+        this.mCursor = cursor;
+        this.mInflater = LayoutInflater.from(mContext);
 
         // Used to get the positions of the columns we
         // are interested in.
