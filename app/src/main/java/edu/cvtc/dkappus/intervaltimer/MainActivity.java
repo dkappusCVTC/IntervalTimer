@@ -1,37 +1,17 @@
 package edu.cvtc.dkappus.intervaltimer;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
-
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+//import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import edu.cvtc.dkappus.intervaltimer.databinding.ActivityMainBinding;
-
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,15 +26,14 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<IntervalTimerModel> intervalTimerModels = IntervalTimerModel.getInstance().intervalTimerModels;
 
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        //private AppBarConfiguration appBarConfiguration;
+        edu.cvtc.dkappus.intervaltimer.databinding.ActivityMainBinding binding =
+                ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
@@ -160,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
+    /*
     public ArrayList<IntervalTimerModel> getIntervalTimerModels() {
         return intervalTimerModels;
     }
@@ -167,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
     public void setIntervalTimerModels2(String name, String duration, String id) {
         intervalTimerModels.add(new IntervalTimerModel(name, duration, id));
     }
+    */
 
     private void setUpIntervalTimerModels() {
         if (intervalTimerModels.isEmpty()) {
