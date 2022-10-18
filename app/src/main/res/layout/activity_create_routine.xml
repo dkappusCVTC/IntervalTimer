@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateRoutine">
+
+    <TextView
+        android:id="@+id/create_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/create_routine_text"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/task_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/task_name_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/create_textView" />
+
+    <EditText
+        android:id="@+id/task_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:hint="@string/task_name_hint"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/task_textView"
+        app:layout_constraintStart_toEndOf="@id/task_textView"
+        tools:ignore="TextContrastCheck" />
+
+    <TextView
+        android:id="@+id/duration_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/duration_label_text"
+        app:layout_constraintStart_toStartOf="@id/task_textView"
+        app:layout_constraintTop_toBottomOf="@id/task_editText" />
+
+    <EditText
+        android:id="@+id/duration_editTextTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:hint="@string/duration_editText_text"
+        android:importantForAutofill="no"
+        android:inputType="time"
+        android:minHeight="48dp"
+        android:textColorHint="#757575"
+        app:layout_constraintBaseline_toBaselineOf="@id/duration_textView"
+        app:layout_constraintStart_toEndOf="@id/duration_textView" />
+
+    <Button
+        android:id="@+id/task_Btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:onClick="saveTask"
+        android:text="@string/add_task_btn"
+        app:layout_constraintEnd_toEndOf="@id/duration_editTextTime"
+        app:layout_constraintHorizontal_bias="0.614"
+        app:layout_constraintStart_toStartOf="@id/duration_textView"
+        app:layout_constraintTop_toBottomOf="@id/duration_editTextTime" />
+
+    <Button
+        android:id="@+id/routine_Btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:onClick="saveRoutine"
+        android:text="@string/add_routine_btn"
+        app:layout_constraintEnd_toEndOf="@id/routineName_editText"
+        app:layout_constraintStart_toStartOf="@id/routineName_editText"
+        app:layout_constraintTop_toBottomOf="@id/routineName_editText"
+        tools:layout_constraintStart_toStartOf="@id/routineName_editText" />
+
+    <EditText
+        android:id="@+id/routineName_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:ems="10"
+        android:hint="@string/routine_name_text"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textColorHint="#757575"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/task_Btn" />
+</androidx.constraintlayout.widget.ConstraintLayout>

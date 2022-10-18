@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="edu.cvtc.dkappus.intervaltimer.MainActivity">
+    <item
+        android:id="@+id/action_contact"
+        android:orderInCategory="100"
+        android:title="@string/contact_me_text"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_create"
+        android:orderInCategory="10"
+        android:title="@string/create_routine_text"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_add_routine" />
+
+    <item
+        android:id="@+id/action_timer"
+        android:orderInCategory="15"
+        android:title="@string/timer_text"
+        app:showAsAction="never" />
+</menu>
