@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.View;
 //import androidx.navigation.ui.AppBarConfiguration;
 import androidx.loader.app.LoaderManager;
@@ -24,7 +26,9 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // Constants
+    private static final String TAG = ".MainActivity.DEBUGGING";
     public static final int LOADER_TASKS = 0;
+    public static final int LOADER_ROUTINES = 1;
     public static final String EXTRA_MESSAGE = "edu.cvtc.dkappus.intervaltimer.extra.MESSAGE";
 
     // Member Variables
@@ -90,25 +94,65 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void initializeTest() {
+
+        // Testing Joining
+        /*String jQuery = "SELECT COUNT(rt.routine_id) as tasks FROM " + DatabaseContract.RoutineInfoEntry.TABLE2_NAME +
+                " r INNER JOIN " + DatabaseContract.RoutineTaskInfoEntry.TABLE3_NAME + " rt ON r._ID = rt.routine_id";
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor jCursor = db.rawQuery(jQuery, null);
+        int rIdPos = jCursor.getColumnIndex("ID");
+        int rNamePos = jCursor.getColumnIndex("routine_name");
+        int rTaskPos = jCursor.getColumnIndex("tasks");
+        jCursor.moveToFirst();
+        Log.d(TAG, "initializeTest: Columns:" + jCursor.getInt(rIdPos) + " " + jCursor.getString(rNamePos) + " " + jCursor.getInt(rTaskPos));*/
         // Testing Insert into DB
         /*
-        boolean isInserted = mDbHelper.insertData("Running", "01:12:00");
+        String taskName = "Slow Walk";
+        String taskTime = "00:25:00";
+        String routineName = "Walking";
+
+        boolean isInserted = mDbHelper.insertTaskData(taskName, taskTime);
 
         if (isInserted == true) {
             Toast.makeText(MainActivity.this,
                     "Data Inserted", Toast.LENGTH_SHORT).show();
-            isInserted = mDbHelper.insertRoutineData("Walking", 1, 1);
+            //isInserted = mDbHelper.insertRoutineData("Walking");
+            if (isInserted == true) {
+                //Toast.makeText(MainActivity.this,
+                  //      "Routine Inserted", Toast.LENGTH_SHORT).show();
+                SQLiteDatabase db = mDbHelper.getReadableDatabase();
+                String rNameQuery = "SELECT _ID FROM " + DatabaseContract.RoutineInfoEntry.TABLE2_NAME +
+                        " WHERE " + DatabaseContract.RoutineInfoEntry.COLUMN_ROUTINE_NAME +
+                        " = " + "'" + routineName + "'";
+                String tIDQuery = "SELECT _ID FROM " + DatabaseContract.TaskInfoEntry.TABLE1_NAME +
+                        " WHERE " + DatabaseContract.TaskInfoEntry.COLUMN_TASK_NAME +
+                        " = " + "'" + taskName + "'";
+
+                Cursor rCursor = db.rawQuery(rNameQuery, null);
+                int rPos = rCursor.getColumnIndex(DatabaseContract.RoutineInfoEntry._ID);
+                rCursor.moveToFirst();
+                Cursor tCursor = db.rawQuery(tIDQuery, null);
+                int tPos = tCursor.getColumnIndex(DatabaseContract.TaskInfoEntry._ID);
+                tCursor.moveToFirst();
+                isInserted = mDbHelper.insertRoutineTaskData(rCursor.getInt(rPos), tCursor.getInt(tPos), 0);
+                rCursor.close();
+                tCursor.close();
+                db.close();
+
+                if (isInserted == true) {
+                    Toast.makeText(MainActivity.this,
+                            "Routine Task Inserted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this,
+                            "Routine task failed to Insert", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(MainActivity.this,
+                        "Routine failed to Insert", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(MainActivity.this,
                     "Data Failed to Insert", Toast.LENGTH_SHORT).show();
-        }
-
-        if (isInserted == true) {
-            Toast.makeText(MainActivity.this,
-                    "Routine Inserted", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(MainActivity.this,
-                    "Routine failed to Insert", Toast.LENGTH_SHORT).show();
         }*/
 
         // End Testing
@@ -161,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // you re-query the database each time the activity is
         // loaded in the app.
         LoaderManager.getInstance(this).restartLoader(LOADER_TASKS, null,this);
+        LoaderManager.getInstance(this).restartLoader(LOADER_ROUTINES, null,this);
     }
 
     /*
@@ -207,43 +252,91 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Create new cursor loader
         CursorLoader loader = null;
 
-        if (id == LOADER_TASKS) {
-            loader = new CursorLoader(this) {
-                @Override
-                public Cursor loadInBackground() {
-                    mIsCreated = true;
-                    // Open your database in read mode.
-                    SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        switch (id) {
+            case LOADER_TASKS:
+                loader = new CursorLoader(this) {
+                    @Override
+                    public Cursor loadInBackground() {
+                        mIsCreated = true;
+                        // Open your database in read mode.
+                        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-                    // Create a list of columns you want to return.
-                    String[] taskColumns = {
-                            DatabaseContract.DataInfoEntry._ID,
-                            DatabaseContract.DataInfoEntry.COLUMN_TASK_NAME,
-                            DatabaseContract.DataInfoEntry.COLUMN_TASK_TIME};
+                        // Create a list of columns you want to return.
+                        /*String[] taskColumns = {
+                                DatabaseContract.TaskInfoEntry._ID,
+                                DatabaseContract.TaskInfoEntry.COLUMN_TASK_NAME,
+                                DatabaseContract.TaskInfoEntry.COLUMN_TASK_TIME};*/
 
-                    // Create an order by field for sorting purposes
-                    String taskOrderBy = DatabaseContract.DataInfoEntry._ID;
+                        // RecyclerView query
+                        String rQuery = "SELECT r._ID as ID, r.routine_name as routine_name, " +
+                                "COUNT(rt.routine_id) as tasks FROM " +
+                                DatabaseContract.RoutineInfoEntry.TABLE2_NAME +
+                                " r INNER JOIN " +
+                                DatabaseContract.RoutineTaskInfoEntry.TABLE3_NAME +
+                                " rt ON r._ID = rt.routine_id";
 
-                    return db.query(DatabaseContract.DataInfoEntry.TABLE1_NAME, taskColumns,
-                            null, null, null, null, taskOrderBy);
-                }
-            };
+                        // Create an order by field for sorting purposes
+                        String taskOrderBy = DatabaseContract.TaskInfoEntry._ID;
+
+                        return db.rawQuery(rQuery, null);
+                    }
+                };
+                break;
+            case LOADER_ROUTINES:
+                loader = new CursorLoader(this) {
+                    @Override
+                    public Cursor loadInBackground() {
+                        mIsCreated = true;
+                        // Open your database in read mode.
+                        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+                        // Create a list of columns to return from routine table
+                        String[] routineColumns = {
+                                DatabaseContract.RoutineInfoEntry._ID,
+                                DatabaseContract.RoutineInfoEntry.COLUMN_ROUTINE_NAME};
+
+                        // Create an order by field for sorting purposes
+                        String routineOrderBy = DatabaseContract.RoutineInfoEntry.COLUMN_ROUTINE_NAME;
+
+                        return db.query(DatabaseContract.RoutineInfoEntry.TABLE2_NAME,
+                                routineColumns,
+                                null,null,null,null,
+                                routineOrderBy);
+                    }
+                };
+                break;
+            default:
+                break;
         }
+
         return loader;
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        if (loader.getId() == LOADER_TASKS && mIsCreated) {
-            // Associate the cursor with your RecyclerAdapter
-            mITRecyclerAdapter.changeCursor(data);
-            mIsCreated = false;
+        switch (loader.getId()) {
+            case LOADER_TASKS:
+                // Associate the cursor with your RecyclerAdapter
+                mITRecyclerAdapter.changeCursor(data);
+                mIsCreated = false;
+                break;
+            case LOADER_ROUTINES:
+                // Associate the cursor with your RecyclerAdapter
+                //mITRecyclerAdapter.changeCursor(data);
+                break;
+            default:
+                break;
         }
+//        if (loader.getId() == LOADER_TASKS && mIsCreated) {
+//            // Associate the cursor with your RecyclerAdapter
+//            mITRecyclerAdapter.changeCursor(data);
+//            mIsCreated = false;
+//        }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-        if (loader.getId() == LOADER_TASKS) {
+        if (loader.getId() == LOADER_TASKS || loader.getId() == LOADER_ROUTINES) {
             // Change the cursor to null (cleanup)
             mITRecyclerAdapter.changeCursor(null);
         }

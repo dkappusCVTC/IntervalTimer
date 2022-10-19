@@ -49,4 +49,10 @@
         <item>02:00:25</item>
         <item>00:50:59</item>
     </string-array>
+
+    <string-array name="Tasks">
+        <item>Walk</item>
+        <item>Run</item>
+        <item>Play</item>
+    </string-array>
 </resources>

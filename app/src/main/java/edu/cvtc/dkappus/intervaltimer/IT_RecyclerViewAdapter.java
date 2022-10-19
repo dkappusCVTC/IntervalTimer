@@ -19,7 +19,7 @@ public class IT_RecyclerViewAdapter extends RecyclerView.Adapter<IT_RecyclerView
     private final LayoutInflater mInflater;
     private Cursor mCursor;
     private int mITNamePosition;
-    private int mITTimePosition;
+    private int mITTaskPosition;
     private int mITIDPosition;
 
     public IT_RecyclerViewAdapter(Context context, Cursor cursor) {
@@ -35,12 +35,9 @@ public class IT_RecyclerViewAdapter extends RecyclerView.Adapter<IT_RecyclerView
     private void populateColumnPositions() {
         if (mCursor != null) {
             // Get column indexes from mCursor
-            mITNamePosition = mCursor.getColumnIndex(
-                    DatabaseContract.DataInfoEntry.COLUMN_TASK_NAME);
-            mITTimePosition = mCursor.getColumnIndex(
-                    DatabaseContract.DataInfoEntry.COLUMN_TASK_TIME);
-            mITIDPosition = mCursor.getColumnIndex(
-                    DatabaseContract.DataInfoEntry._ID);
+            mITNamePosition = mCursor.getColumnIndex("routine_name");
+            mITTaskPosition = mCursor.getColumnIndex("tasks");
+            mITIDPosition = mCursor.getColumnIndex("ID");
         }
     }
 
@@ -79,14 +76,14 @@ public class IT_RecyclerViewAdapter extends RecyclerView.Adapter<IT_RecyclerView
         // Get the actual values
         String taskName =
                 mCursor.getString(mITNamePosition);
-        String taskTime =
-                mCursor.getString(mITTimePosition);
+        int taskTime =
+                mCursor.getInt(mITTaskPosition);
         int taskID =
                 mCursor.getInt(mITIDPosition);
 
         // Pass the information into the holder
         holder.tvName.setText(taskName);
-        holder.tvTasks.setText(taskTime);
+        holder.tvTasks.setText(String.valueOf(taskTime));
         holder.tvId.setText(String.valueOf(taskID));
     }
 
