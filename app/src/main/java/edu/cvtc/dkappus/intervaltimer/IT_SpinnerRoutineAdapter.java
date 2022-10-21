@@ -84,9 +84,13 @@ public class IT_SpinnerRoutineAdapter extends CursorAdapter {
         int text4 = cursor.getInt(mIDPosition);
         String text5 = cursor.getString(mNamePosition);
         String text6 = String.valueOf(mLastPosition) + " Tasks";
-        holder.text4.setText(String.valueOf(text4));
+        if (text4 != 0) {
+            holder.text4.setText(String.valueOf(text4));
+            holder.text6.setText(text6);
+        }
+
         holder.text5.setText(text5);
-        holder.text6.setText(text6);
+
     }
 }
 

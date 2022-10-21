@@ -69,7 +69,9 @@ public class IT_SpinnerAdapter extends CursorAdapter {
         int text1 = cursor.getInt(mIDPosition);
         String text2 = cursor.getString(mNamePosition);
         String text3 = cursor.getString(mTimePosition);
-        holder.text1.setText(String.valueOf(text1));
+        if (text1 != 0) {
+            holder.text1.setText(String.valueOf(text1));holder.text1.setText(String.valueOf(text1));
+        }
         holder.text2.setText(text2);
         holder.text3.setText(text3);
 

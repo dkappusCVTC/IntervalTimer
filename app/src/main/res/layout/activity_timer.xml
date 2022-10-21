@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="00:00:00"
+        android:text="@string/time_text"
         android:textSize="50sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/current_task_textView"
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="Current Task:"
+        android:text="@string/current_task_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/timer_textView"
         app:layout_constraintStart_toStartOf="@id/timer_textView"
@@ -49,4 +49,26 @@
         app:layout_constraintEnd_toEndOf="@id/task_label_textView"
         app:layout_constraintStart_toStartOf="@id/task_label_textView"
         app:layout_constraintTop_toBottomOf="@id/task_label_textView" />
+
+    <Button
+        android:id="@+id/btn_start_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="@string/btn_start_text"
+        app:layout_constraintEnd_toEndOf="@id/time_textView"
+        app:layout_constraintStart_toStartOf="@id/time_textView"
+        app:layout_constraintTop_toBottomOf="@id/time_textView" />
+
+    <Button
+        android:id="@+id/btn_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/btn_reset_text"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/btn_start_pause"
+        app:layout_constraintStart_toEndOf="@id/btn_start_pause"
+        app:layout_constraintTop_toTopOf="@id/btn_start_pause"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

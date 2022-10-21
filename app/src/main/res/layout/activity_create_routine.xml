@@ -10,11 +10,15 @@
         android:id="@+id/routine_Spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="5dp"
+        android:minHeight="48dp"
         android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toBottomOf="@id/task_Spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/task_Spinner" />
+        app:layout_constraintBottom_toTopOf="@id/routineName_editText"
+        app:layout_constraintEnd_toEndOf="@id/routineName_editText"
+        app:layout_constraintStart_toStartOf="@id/routineName_editText"
+        app:layout_constraintTop_toBottomOf="@id/step2_Label"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/create_textView"
@@ -36,13 +40,13 @@
         android:layout_marginTop="24dp"
         android:text="@string/task_name_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/create_textView" />
+        app:layout_constraintTop_toBottomOf="@id/task_Spinner" />
 
     <EditText
         android:id="@+id/task_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="5dp"
         android:ems="10"
         android:hint="@string/task_name_hint"
         android:importantForAutofill="no"
@@ -63,7 +67,7 @@
 
     <EditText
         android:id="@+id/duration_editTextTime"
-        android:layout_width="75dp"
+        android:layout_width="78dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ems="10"
@@ -76,33 +80,22 @@
         app:layout_constraintStart_toEndOf="@id/duration_textView" />
 
     <Button
-        android:id="@+id/task_Btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:onClick="saveTask"
-        android:text="@string/add_task_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/duration_editTextTime"
-        app:layout_constraintTop_toTopOf="@id/duration_editTextTime" />
-
-    <Button
         android:id="@+id/routine_Btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:onClick="saveRoutine"
         android:text="@string/add_routine_btn"
         app:layout_constraintEnd_toEndOf="@id/routineName_editText"
         app:layout_constraintStart_toStartOf="@id/routineName_editText"
-        app:layout_constraintTop_toBottomOf="@id/routineName_editText"
+        app:layout_constraintTop_toBottomOf="@+id/routineName_editText"
         tools:layout_constraintStart_toStartOf="@id/routineName_editText" />
 
     <EditText
         android:id="@+id/routineName_editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/routine_name_text"
         android:importantForAutofill="no"
@@ -111,15 +104,36 @@
         android:textColorHint="#757575"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/task_Btn" />
+        app:layout_constraintTop_toBottomOf="@id/routine_Spinner"
+        tools:layout_constraintBottom_toTopOf="@id/routine_Btn" />
 
     <Spinner
         android:id="@+id/task_Spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
+        android:minHeight="48dp"
         android:spinnerMode="dropdown"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/duration_textView" />
+        app:layout_constraintEnd_toEndOf="@id/create_textView"
+        app:layout_constraintStart_toStartOf="@id/create_textView"
+        app:layout_constraintTop_toBottomOf="@id/step1_Label"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/step1_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/step1_label_text"
+        app:layout_constraintStart_toStartOf="@id/task_textView"
+        app:layout_constraintTop_toBottomOf="@id/create_textView" />
+
+    <TextView
+        android:id="@+id/step2_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/step2_label_text"
+        app:layout_constraintStart_toStartOf="@id/duration_textView"
+        app:layout_constraintTop_toBottomOf="@id/duration_editTextTime" />
 </androidx.constraintlayout.widget.ConstraintLayout>

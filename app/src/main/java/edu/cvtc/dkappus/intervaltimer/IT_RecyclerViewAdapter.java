@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class IT_RecyclerViewAdapter extends RecyclerView.Adapter<IT_RecyclerViewAdapter.MyViewHolder> {
     // Member variables
-
+    private static final String TAG = ".IT_RecyclerViewAdapter.DEBUGGING";
     private final Context mContext;
     private final LayoutInflater mInflater;
     private Cursor mCursor;

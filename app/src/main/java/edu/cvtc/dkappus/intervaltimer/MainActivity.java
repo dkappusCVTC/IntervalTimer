@@ -75,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void initializeDisplay() {
         DataManager.loadFromDatabase(mDbHelper);
+        boolean dataSet = mDbHelper.populateBlankDatabase();
+        if (!dataSet) {
+            Toast.makeText(this, "Data not set", Toast.LENGTH_SHORT).show();
+        }
 
         // Set a reference to your list of items layout
         mRecyclerView = findViewById(R.id.it_RecyclerView);
@@ -106,12 +110,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         jCursor.moveToFirst();
         Log.d(TAG, "initializeTest: Columns:" + jCursor.getInt(rIdPos) + " " + jCursor.getString(rNamePos) + " " + jCursor.getInt(rTaskPos));*/
         // Testing Insert into DB
-        /*
-        String taskName = "Slow Walk";
-        String taskTime = "00:25:00";
+        /*int taskID = 0;
+        String taskName = "Create a new Task";
+        String taskTime = " ";
         String routineName = "Walking";
 
-        boolean isInserted = mDbHelper.insertTaskData(taskName, taskTime);
+        boolean isInserted = mDbHelper.insertTaskData(taskID, taskName, taskTime);
 
         if (isInserted == true) {
             Toast.makeText(MainActivity.this,
@@ -273,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 DatabaseContract.RoutineInfoEntry.TABLE2_NAME +
                                 " r INNER JOIN " +
                                 DatabaseContract.RoutineTaskInfoEntry.TABLE3_NAME +
-                                " rt ON r._ID = rt.routine_id";
+                                " rt ON r._ID = rt.routine_id GROUP BY r._ID, r.routine_name";
 
                         // Create an order by field for sorting purposes
                         String taskOrderBy = DatabaseContract.TaskInfoEntry._ID;

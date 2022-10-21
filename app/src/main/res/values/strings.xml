@@ -16,43 +16,10 @@
     <string name="add_routine_btn">Add Routine</string>
     <string name="routine_name_text">Enter Routine Name</string>
     <string name="tasks_label_text">Time</string>
-    
-    <string-array name="interval_timer_routine_name">
-        <item>Neighborhood Walk/Run</item>
-        <item>School Work</item>
-        <item>House Chores</item>
-        <item>Monday Workout</item>
-        <item>Tuesday Workout</item>
-        <item>Wednesday Workout</item>
-        <item>Thursday Workout</item>
-        <item>Friday Workout</item>
-    </string-array>
-
-    <string-array name="interval_timer_routine_id">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-    </string-array>
-
-    <string-array name="interval_timer_tasks">
-        <item>00:25:00</item>
-        <item>04:00:00</item>
-        <item>01:00:00</item>
-        <item>00:30:00</item>
-        <item>00:70:00</item>
-        <item>00:20:00</item>
-        <item>02:00:25</item>
-        <item>00:50:59</item>
-    </string-array>
-
-    <string-array name="Tasks">
-        <item>Walk</item>
-        <item>Run</item>
-        <item>Play</item>
-    </string-array>
+    <string name="step1_label_text">Step 1: Select or Create Task</string>
+    <string name="step2_label_text">Step 2: Select or Create Routine</string>
+    <string name="btn_reset_text">Reset</string>
+    <string name="btn_start_text">Start</string>
+    <string name="current_task_text">Current Task:</string>
+    <string name="time_text">00:00:00</string>
 </resources>
